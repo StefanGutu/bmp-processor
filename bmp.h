@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-struct __attribute__((__packed__)) BITMAPHeader{
+struct __attribute__((__packed__)) BITMAPHeader{ // bit_map_header_s _t
     char name[2]; // INFO: it's need to be BM
     unsigned int size;
     unsigned short int reserved1;
@@ -13,6 +13,10 @@ struct __attribute__((__packed__)) BITMAPHeader{
     unsigned int image_offset; // from where image starts in file
 };
 
+/**
+ * @brief 
+ * 
+ */
 struct __attribute__((__packed__)) DIBHeader{
     unsigned int header_size;
     unsigned int width;
@@ -43,7 +47,41 @@ struct Image{
     struct RGB **rgb;
 };
 
+// typedef struct app_s {
+//     struct Image *opened_image;
+//     FILE* fp;
+//     FILE* fbw;
+//     navbar_t navbar_settings;
+//     // uint32_t brush_color;
+//     // uint32_t brush_size; // INFO: If drawing a line, then the width of the line should be the brush size
+// } app_ptr_t, *app_t;
+
+// typedef struct navbar_s {
+//     uint32_t brush_color;
+//     uint32_t brush_size;
+// } navbar_t;
+
+// typedef struct main_view_s {
+//     struct Imgae *opened_image;
+//     FILE* fbw;
+// } main_view_t;
+
+// typedef enum errors_s {
+//     OK = 0,
+//     COULD_NOT_OPEN_FILE = 1
+// } errors_t;
+
 int OpenBmpFile(FILE *fp);
+
+// errors_t        init_application       (app_t * app);
+// errors_t        open_image_file        (app_t app);
+// errors_t        read_image             (app_t app);
+// errors_t        write_image            (app_t app);
+// errors_t        free_app               (app_t * app); // INFO: Calls free_image, and fclose on files;
+
+struct mihai_s {
+    int a, b, c;
+};
 
 
 #endif

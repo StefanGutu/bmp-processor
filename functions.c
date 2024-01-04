@@ -3,6 +3,7 @@
 
 #include "bmp.h"
 
+
 void freeImage(struct Image *pic){
     if (pic != NULL) {
         if (pic->rgb != NULL) {
