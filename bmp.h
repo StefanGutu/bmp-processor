@@ -40,12 +40,12 @@ typedef struct image{
 }image_t;
 
 typedef struct brush{
-    uint32_t    brush_color;
-    uint32_t    brush_size;
+    rgb_t       brush_color;
+    uint16_t    brush_size;
 } brush_t;
 
 typedef struct app{
-    struct Image    *opened_image;
+    image_t         *opened_image;
     brush_t         brush_settings;
 }app_t;
 
@@ -61,11 +61,11 @@ typedef struct app{
 //     COULD_NOT_OPEN_FILE = 1
 // } errors_t;
 
-void     open_bmp_file        (FILE *fp);
-void     read_image          (FILE *fp,image_t *pic);
-void     write_image         (image_t *pic);// INFO: the information of the edited image will always be saved in new.bmp
-void     free_image          (image_t *pic);// use this to free the memmory for the image
-void    general_functions    (image_t *pic);//INFO: here are all the function to edit the image 
+void     open_bmp_file          (FILE *fp);
+void     read_image             (FILE *fp,app_t *newEdit);
+void     write_image            (app_t *newEdit);// INFO: the information of the edited image will always be saved in new.bmp
+void     free_image             (app_t *newEdit);// use this to free the memmory for the image
+void     general_functions      (app_t *newEdit);//INFO: here are all the function to edit the image 
 
 
 #endif

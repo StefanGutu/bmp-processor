@@ -4,23 +4,26 @@
 #include "bmp.h"
 
 
-void free_image(image_t *pic){
-    if (pic != NULL) {
-        if (pic->rgb != NULL) {
-            for (uint32_t i = 0; i < pic->infoDIB.height; ++i) {
-                if (pic->rgb[i] != NULL)
-                    free(pic->rgb[i]);
+void free_image(app_t *newEdit){
+    if(newEdit != NULL){
+        if (newEdit->opened_image != NULL) {
+            if (newEdit->opened_image->rgb != NULL) {
+                for (uint32_t i = 0; i < newEdit->opened_image->infoDIB.height; ++i) {
+                    if (newEdit->opened_image->rgb[i] != NULL)
+                        free(newEdit->opened_image->rgb[i]);
+                }
+
+                free(newEdit->opened_image->rgb);
             }
 
-            free(pic->rgb);
+            free(newEdit->opened_image);
         }
-
-        free(pic);
     }
+    free(newEdit);
 }
 
 
-void write_image(image_t *pic){
+void write_image(app_t *newEdit){
 
     FILE *fbw = fopen("new.bmp", "wb");
     if (fbw == NULL) {
@@ -29,15 +32,15 @@ void write_image(image_t *pic){
     }
 
 
-    fwrite(&pic->infoBITMAP, sizeof pic->infoBITMAP, 1, fbw);
+    fwrite(&newEdit->opened_image->infoBITMAP, sizeof newEdit->opened_image->infoBITMAP, 1, fbw);
 
-    fwrite(&pic->infoDIB, sizeof(dib_header_t), 1, fbw);
+    fwrite(&newEdit->opened_image->infoDIB, sizeof(dib_header_t), 1, fbw);
 
-    int32_t padding = (4 - ((sizeof(rgb_t) * pic->infoDIB.width) % 4)) % 4;
+    int32_t padding = (4 - ((sizeof(rgb_t) * newEdit->opened_image->infoDIB.width) % 4)) % 4;
     uint8_t pad_byte = 0;
     
-    for (uint32_t i = 0; i < pic->infoDIB.height; i++) {
-        fwrite(pic->rgb[i], sizeof (rgb_t), pic->infoDIB.width, fbw);
+    for (uint32_t i = 0; i < newEdit->opened_image->infoDIB.height; i++) {
+        fwrite(newEdit->opened_image->rgb[i], sizeof (rgb_t), newEdit->opened_image->infoDIB.width, fbw);
 
         fwrite(&pad_byte, 1, padding, fbw);
     }
@@ -48,25 +51,26 @@ void write_image(image_t *pic){
 
 
 
-void read_image(FILE *fp,image_t *pic) {
-    if ((pic->rgb = (rgb_t **)malloc(pic->infoDIB.height * sizeof(rgb_t *))) == NULL) {
+void read_image(FILE *fp,app_t *newEdit) {
+
+    if ((newEdit->opened_image->rgb = (rgb_t **)malloc(newEdit->opened_image->infoDIB.height * sizeof(rgb_t *))) == NULL) {
         printf("Error allocating memory for rows\n");
         exit(EXIT_FAILURE);
     }
 
     
-    for (uint32_t i = 0; i < pic->infoDIB.height; i++) {
-        if ((pic->rgb[i] = (rgb_t *)malloc(pic->infoDIB.width * sizeof(rgb_t))) == NULL) {
+    for (uint32_t i = 0; i < newEdit->opened_image->infoDIB.height; i++) {
+        if ((newEdit->opened_image->rgb[i] = (rgb_t *)malloc(newEdit->opened_image->infoDIB.width * sizeof(rgb_t))) == NULL) {
             printf("Error allocating memory for columns\n");
             exit(EXIT_FAILURE);
         }
     }
 
-    int32_t padding = (4 - ((sizeof(rgb_t) * pic->infoDIB.width) % 4)) % 4;
+    int32_t padding = (4 - ((sizeof(rgb_t) * newEdit->opened_image->infoDIB.width) % 4)) % 4;
 
     
-    for (uint32_t i = 0; i < pic->infoDIB.height; i++) {
-        if (fread(pic->rgb[i], sizeof(rgb_t), pic->infoDIB.width, fp) < pic->infoDIB.width) {
+    for (uint32_t i = 0; i < newEdit->opened_image->infoDIB.height; i++) {
+        if (fread(newEdit->opened_image->rgb[i], sizeof(rgb_t), newEdit->opened_image->infoDIB.width, fp) < newEdit->opened_image->infoDIB.width) {
             fclose(fp);
             return;
         }
@@ -76,33 +80,40 @@ void read_image(FILE *fp,image_t *pic) {
 }
 
 void open_bmp_file(FILE *fp){
- 
-    image_t *picture = NULL;
+    app_t *newEdit = NULL;
 
-    if((picture=malloc(sizeof *picture)) == NULL){
+    if((newEdit=malloc(sizeof *newEdit)) == NULL){
         printf("Error memmory allocation for picture\n");
         exit(EXIT_FAILURE);
     }
 
-    fread(&picture->infoBITMAP, sizeof picture->infoBITMAP, 1, fp);
     
-    if(picture->infoBITMAP.name[0] != 'B' || picture->infoBITMAP.name[1] != 'M') {
+
+    if((newEdit->opened_image=malloc(sizeof * (newEdit->opened_image))) == NULL){
+        printf("Error memmory allocation for picture\n");
+        exit(EXIT_FAILURE);
+    }
+
+    fread(&newEdit->opened_image->infoBITMAP, sizeof(newEdit->opened_image->infoBITMAP), 1, fp);
+    
+    if(newEdit->opened_image->infoBITMAP.name[0] != 'B' || newEdit->opened_image->infoBITMAP.name[1] != 'M') {
         fclose(fp);
         return;
     }
 
-    fread(&picture->infoDIB, sizeof picture->infoDIB,1,fp);
+    fread(&newEdit->opened_image->infoDIB, sizeof newEdit->opened_image->infoDIB,1,fp);
     
-    if(picture->infoDIB.header_size != 40 || picture->infoDIB.compression != 0 || picture->infoDIB.bitsperpixel != 24) {
+    if(newEdit->opened_image->infoDIB.header_size != 40 || newEdit->opened_image->infoDIB.compression != 0 || newEdit->opened_image->infoDIB.bitsperpixel != 24) {
         fclose(fp);
         return;
     }
 
-    fseek(fp,picture->infoBITMAP.image_offset,SEEK_SET);
+    fseek(fp,newEdit->opened_image->infoBITMAP.image_offset,SEEK_SET);
     
-    read_image(fp,picture);
-    general_functions(picture);
-    free_image(picture);
+    read_image(fp,newEdit);
+    
+    general_functions(newEdit);
+    free_image(newEdit);
 
     fclose(fp);
 } 
