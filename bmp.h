@@ -5,62 +5,52 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-struct __attribute__((__packed__)) BITMAPHeader{ // bit_map_header_s _t
-    char name[2]; // INFO: it's need to be BM
-    unsigned int size;
-    unsigned short int reserved1;
-    unsigned short int reserved2;
-    unsigned int image_offset; // from where image starts in file
-};
+typedef struct __attribute__((__packed__)) bit_map_header{ // bit_map_header_s _t
+    char        name[2]; // INFO: it's need to be BM
+    uint32_t    size;
+    uint16_t    reserved1;
+    uint16_t    reserved2;
+    uint32_t    image_offset; // from where image starts in file
+}bit_map_header_t;
 
-/**
- * @brief 
- * 
- */
-struct __attribute__((__packed__)) DIBHeader{
-    unsigned int header_size;
-    unsigned int width;
-    unsigned int height;
-    unsigned short int colorplanes;
-    unsigned short int bitsperpixel;
-    unsigned int compression;
-    unsigned int image_size;
+typedef struct __attribute__((__packed__)) dib_header{
+    uint32_t    header_size;
+    uint32_t    width;
+    uint32_t    height;
+    uint16_t    colorplanes;
+    uint16_t    bitsperpixel;
+    uint32_t    compression;
+    uint32_t    image_size;
     int32_t     bi_xpels_per_meter;
     int32_t     bi_ypels_per_meter;
     uint32_t    bi_clr_used;
     uint32_t    bi_clr_important;
-};
+}dib_header_t;
 
-// MAtrice
-// bgrbgrrgbrgbrgb ... rgbpadding
+typedef struct __attribute__((__packed__)) rgb{
+    uint8_t     red;
+    uint8_t     green;
+    uint8_t     blue;
+}rgb_t; 
+
+typedef struct image{
+    bit_map_header_t    infoBITMAP;
+    dib_header_t        infoDIB;
+    rgb_t               **rgb;
+}image_t;
+
+typedef struct brush{
+    uint32_t    brush_color;
+    uint32_t    brush_size;
+} brush_t;
+
+typedef struct app{
+    struct Image    *opened_image;
+    brush_t         brush_settings;
+}app_t;
 
 
-struct __attribute__((__packed__)) RGB{
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
-}; 
-
-struct Image{
-    struct BITMAPHeader infoBITMAP;
-    struct DIBHeader infoDIB;
-    struct RGB **rgb;
-};
-
-// typedef struct app_s {
-//     struct Image *opened_image;
-//     FILE* fp;
-//     FILE* fbw;
-//     navbar_t navbar_settings;
-//     // uint32_t brush_color;
-//     // uint32_t brush_size; // INFO: If drawing a line, then the width of the line should be the brush size
-// } app_ptr_t, *app_t;
-
-// typedef struct navbar_s {
-//     uint32_t brush_color;
-//     uint32_t brush_size;
-// } navbar_t;
-
+// INFO: if you want to change something andd to add new things you can use this 
 // typedef struct main_view_s {
 //     struct Imgae *opened_image;
 //     FILE* fbw;
@@ -71,17 +61,11 @@ struct Image{
 //     COULD_NOT_OPEN_FILE = 1
 // } errors_t;
 
-int OpenBmpFile(FILE *fp);
-
-// errors_t        init_application       (app_t * app);
-// errors_t        open_image_file        (app_t app);
-// errors_t        read_image             (app_t app);
-// errors_t        write_image            (app_t app);
-// errors_t        free_app               (app_t * app); // INFO: Calls free_image, and fclose on files;
-
-struct mihai_s {
-    int a, b, c;
-};
+void     open_bmp_file        (FILE *fp);
+void     read_image          (FILE *fp,image_t *pic);
+void     write_image         (image_t *pic);// INFO: the information of the edited image will always be saved in new.bmp
+void     free_image          (image_t *pic);// use this to free the memmory for the image
+void    general_functions    (image_t *pic);//INFO: here are all the function to edit the image 
 
 
 #endif

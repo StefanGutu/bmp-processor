@@ -6,6 +6,6 @@
 int main(){
     char *FileName = "nature-photography-pictures.bmp";
     FILE *fp = fopen(FileName,"rb");
-    OpenBmpFile(fp);
+    open_bmp_file(fp);
     return 0;
 }
