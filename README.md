@@ -13,7 +13,7 @@ A simple project that work with BMP images in C.
 
 The project helps you to modify a BMP image in console,
 it's a simple project than can draw lines,squars and triangles of 
-different colors on your.
+different colors on a new  BMP image.
 
 
 ## Installation
@@ -32,7 +32,7 @@ different colors on your.
     cd bmp-processor
     ```
 
-2. Open the main.c file and there you can add your own bmp file or to take one from the
+2. Open the main.c file and there you can add your own BMP image or to take one from the
 [example folder](https://github.com/IntoParadox/bmp-processor/tree/main/examples).
 
 > [!NOTE]
