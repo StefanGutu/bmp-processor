@@ -47,21 +47,11 @@ typedef struct brush{
 typedef struct app{
     image_t         *opened_image;
     brush_t         brush_settings;
+    char            *file_name_out;
 }app_t;
 
 
-// INFO: if you want to change something andd to add new things you can use this 
-// typedef struct main_view_s {
-//     struct Imgae *opened_image;
-//     FILE* fbw;
-// } main_view_t;
-
-// typedef enum errors_s {
-//     OK = 0,
-//     COULD_NOT_OPEN_FILE = 1
-// } errors_t;
-
-void     open_bmp_file          (FILE *fp);
+void     open_bmp_file          (FILE *fp_in,char *file_name);
 void     read_image             (FILE *fp,app_t *newEdit);
 void     write_image            (app_t *newEdit);// INFO: the information of the edited image will always be saved in new.bmp
 void     free_image             (app_t *newEdit);// use this to free the memmory for the image

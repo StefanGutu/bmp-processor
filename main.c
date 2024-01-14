@@ -2,10 +2,15 @@
 #include <stdlib.h>
 
 #include "bmp.h"
-//nature-photography-pictures
 int main(){
-    char *FileName = "nature-photography-pictures.bmp";
-    FILE *fp = fopen(FileName,"rb");
-    open_bmp_file(fp);
+
+    //you can change it with your bmp
+    char *file_name_source = "nature-photography-pictures.bmp";
+    //the output file will be named new.bmp if you dont change it
+    char *file_name_out = "new.bmp";
+
+    FILE *fp_in = fopen(file_name_source,"rb");
+
+    open_bmp_file(fp_in,file_name_out);
     return 0;
 }

@@ -25,27 +25,27 @@ void free_image(app_t *newEdit){
 
 void write_image(app_t *newEdit){
 
-    FILE *fbw = fopen("new.bmp", "wb");
-    if (fbw == NULL) {
+    FILE *fp = fopen(newEdit->file_name_out, "wb");
+    if (fp == NULL) {
         perror("Error opening file");
         return; 
     }
 
 
-    fwrite(&newEdit->opened_image->infoBITMAP, sizeof newEdit->opened_image->infoBITMAP, 1, fbw);
+    fwrite(&newEdit->opened_image->infoBITMAP, sizeof newEdit->opened_image->infoBITMAP, 1, fp);
 
-    fwrite(&newEdit->opened_image->infoDIB, sizeof(dib_header_t), 1, fbw);
+    fwrite(&newEdit->opened_image->infoDIB, sizeof(dib_header_t), 1, fp);
 
     int32_t padding = (4 - ((sizeof(rgb_t) * newEdit->opened_image->infoDIB.width) % 4)) % 4;
     uint8_t pad_byte = 0;
     
     for (uint32_t i = 0; i < newEdit->opened_image->infoDIB.height; i++) {
-        fwrite(newEdit->opened_image->rgb[i], sizeof (rgb_t), newEdit->opened_image->infoDIB.width, fbw);
+        fwrite(newEdit->opened_image->rgb[i], sizeof (rgb_t), newEdit->opened_image->infoDIB.width, fp);
 
-        fwrite(&pad_byte, 1, padding, fbw);
+        fwrite(&pad_byte, 1, padding,fp);
     }
 
-    fclose(fbw);
+    fclose(fp);
 }
 
 
@@ -79,7 +79,7 @@ void read_image(FILE *fp,app_t *newEdit) {
     }
 }
 
-void open_bmp_file(FILE *fp){
+void open_bmp_file(FILE *fp,char *file_name){
     app_t *newEdit = NULL;
 
     if((newEdit=malloc(sizeof *newEdit)) == NULL){
@@ -112,6 +112,8 @@ void open_bmp_file(FILE *fp){
     
     read_image(fp,newEdit);
     
+    newEdit->file_name_out = file_name;
+
     general_functions(newEdit);
     free_image(newEdit);
 
