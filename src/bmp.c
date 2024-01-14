@@ -141,7 +141,7 @@ void mod_cl_or_size(app_t *newEdit){
     newEdit->brush_settings.brush_color.green = (uint8_t)g;
     newEdit->brush_settings.brush_color.blue = (uint8_t)b;
 
-    while (size <= 0 || size > 255) {
+    while (size <= 0 || size > 15) {
         fprintf(stderr, "<Error>: size too small/big [%d]\n", size);
         scanf("%d", &size);
     }
