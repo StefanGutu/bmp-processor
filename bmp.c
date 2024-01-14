@@ -152,14 +152,30 @@ void draw_triangle(app_t *newEdit){
 
     //I used here x2 y2 as the top angle of triangle  
     for(int i = 0; i<=newEdit->brush_settings.brush_size;i++){
+
         if(x1 == x3){
-            draw(newEdit,x1+i,y1,x3+i,y3);
+            draw(newEdit,x1-i,y1,x3-i,y3);
+            draw(newEdit,x1-i,y1,x2-i,y2);
+            draw(newEdit,x3-i,y3,x2-i,y2);
+
         }else if(y1 == y3){
-            draw(newEdit,x1,y1+i,x3,y3+i);
+            if(y2 > y1){
+                if(x1 < x3){
+                    draw(newEdit,x1-newEdit->brush_settings.brush_size,y1-i,x3,y3-i);
+                }else{
+                    draw(newEdit,x1,y1-i,x3-newEdit->brush_settings.brush_size,y3-i);
+                }
+            }else{
+                if(x1 < x3){
+                    draw(newEdit,x1-newEdit->brush_settings.brush_size,y1+i,x3,y3+i);
+                }else{
+                    draw(newEdit,x1,y1+i,x3-newEdit->brush_settings.brush_size,y3+i);
+                }
+            }
+            
+            draw(newEdit,x1-i,y1,x2-i,y2);
+            draw(newEdit,x3-i,y3,x2-i,y2); 
         }
-        
-        draw(newEdit,x1+i,y1,x2+i,y2);
-        draw(newEdit,x3+i,y3,x2+i,y2);
            
     }
 
