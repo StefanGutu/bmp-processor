@@ -3,55 +3,15 @@
 
 #include "bmp.h"
 
-void paint(rgb_t *pixel,rgb_t color);
 
-unsigned char grayscale(rgb_t rgb){
-    return ((0.3*rgb.red) + (0.6*rgb.green) + (0.1*rgb.blue));
+//function that give color to  the pixel for drawing
+void paint(rgb_t *pixel,rgb_t color){
+    rgb_t temp;
+    temp.red = color.red;
+    temp.green = color.green;
+    temp.blue = color.blue;
+    *pixel = temp;
 }
-
-
-// converts an RGB image in an Gray image
-void rgb_to_gray(app_t *newEdit){
-    
-    for(uint32_t i = 0; i < newEdit->opened_image->infoDIB.height;i++){
-        for(uint32_t j = 0;j < newEdit->opened_image->infoDIB.width;j++){
-            newEdit->opened_image->rgb[i][j].red = grayscale(newEdit->opened_image->rgb[i][j]);
-            newEdit->opened_image->rgb[i][j].green = grayscale(newEdit->opened_image->rgb[i][j]);
-            newEdit->opened_image->rgb[i][j].blue = grayscale(newEdit->opened_image->rgb[i][j]);
-        }
-    }
-}
-
-void create_bw_image(app_t *newEdit){
-    
-    FILE *fp = fopen("new.bmp","rb+");
-    rgb_to_gray(newEdit);
-    write_image(newEdit);
-    
-    fclose(fp);
-}
-
-//Make an image with TEXT
-void image_to_text(app_t *newEdit){
-
-    FILE *fp = fopen("new.bmp","rb+");
-    
-
-    char txtPixel[] = {'#','$','%','&','Q','Y','U','O'};
-    unsigned char gs;
-
-    for(uint32_t i = 0;i < newEdit->opened_image->infoDIB.height;i++){
-        for(uint32_t j = 0; j < newEdit->opened_image->infoDIB.width;j++){
-            gs = grayscale(newEdit->opened_image->rgb[i][j]);
-            printf("%c",txtPixel[gs/32]);
-        }
-        printf("\n");
-    }
-
-    
-    fclose(fp);
-}
-
 
 // this function use Bresenham's Line Algorithm to draw lines
 void draw(app_t *newEdit,int x1,int y1,int x2,int y2){
@@ -83,17 +43,6 @@ void draw(app_t *newEdit,int x1,int y1,int x2,int y2){
     }
     
 }
-
-
-//function that give color to  the pixel for drawing
-void paint(rgb_t *pixel,rgb_t color){
-    rgb_t temp;
-    temp.red = color.red;
-    temp.green = color.green;
-    temp.blue = color.blue;
-    *pixel = temp;
-}
-
 
 // function that draw lines on the image
 //INFO:it's draws only simple straight and diagonals lines
@@ -260,33 +209,25 @@ void general_functions(app_t *newEdit){
     while(num != 0){
         printf("What do you want to change?\n");
         printf("0.Leave\n");
-        printf("1.Make it gray\n");
-        printf("2.Print the image in text (in terminal)\n");
-        printf("3.Draw a line\n");
-        printf("4.Draw a square\n");
-        printf("5.Draw a triangle\n");
-        printf("6.Change the color or the size of the brush\n");
+        printf("1.Draw a line\n");
+        printf("2.Draw a square\n");
+        printf("3.Draw a triangle\n");
+        printf("4.Change the color or the size of the brush\n");
         scanf("%d",&num);
 
         if(num == 0)break;
 
         switch (num){
         case 1:
-            create_bw_image(newEdit);
-            break;
-        case 2:
-            image_to_text(newEdit);
-            break;
-        case 3:
             draw_line(newEdit);
             break;
-        case 4:
+        case 2:
             draw_square(newEdit);
             break;
-        case 5:
+        case 3:
             draw_triangle(newEdit);
             break;
-        case 6:
+        case 4:
             mod_cl_or_size(newEdit);
             break;
         default:
