@@ -13,7 +13,7 @@ A simple project that work with BMP images in C.
 
 The project helps you to modify a BMP image in console,
 it's a simple project than can draw lines,squars and triangles of 
-different colors on a new  bmp image.
+different colors on a new  BMP image.
 
 
 ## Installation
