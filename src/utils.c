@@ -50,7 +50,12 @@ void write_image(app_t *newEdit){
 
 
 
-
+/**
+ * @brief Reads an image from a file.
+ * 
+ * @param fp opened bmp file
+ * @param newEdit application
+ */
 void read_image(FILE *fp,app_t *newEdit) {
 
     if ((newEdit->opened_image->rgb = (rgb_t **)malloc(newEdit->opened_image->infoDIB.height * sizeof(rgb_t *))) == NULL) {
@@ -77,6 +82,17 @@ void read_image(FILE *fp,app_t *newEdit) {
         
         fseek(fp, padding, SEEK_CUR);
     }
+}
+
+void app_entry_point(char *in_file_name, char *out_file_name) {
+    FILE *in_file = fopen(in_file_name, "rb");
+
+    if (in_file == NULL) {
+        fprintf(stderr, "<Error>: file %s does not exist\n", in_file_name);
+        exit(EXIT_FAILURE);
+    }
+
+    open_bmp_file(in_file, out_file_name);
 }
 
 void open_bmp_file(FILE *fp,char *file_name){

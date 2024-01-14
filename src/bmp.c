@@ -49,8 +49,6 @@ void draw(app_t *newEdit,int x1,int y1,int x2,int y2){
 void draw_line(app_t *newEdit){
    
     int x1,y1,x2,y2;
-    printf("Enter the coordinates\n");
-    printf("x1 y1 x2 y2:\n");
     scanf("%d %d %d %d",&x1,&y1,&x2,&y2);
 
     for(int i = 0; i<=newEdit->brush_settings.brush_size;i++){
@@ -72,8 +70,6 @@ void draw_square(app_t *newEdit){
     
 
     int x1,y1,x2,y2;
-    printf("Enter the coordinates\n");
-    printf("x1 y1 x2 y2:\n");
     scanf("%d %d %d %d",&x1,&y1,&x2,&y2);
 
     for(int i = 0; i<=newEdit->brush_settings.brush_size;i++){
@@ -95,8 +91,6 @@ void draw_square(app_t *newEdit){
 void draw_triangle(app_t *newEdit){
 
     int x1,y1,x2,y2,x3,y3;
-    printf("Enter the coordinates\n");
-    printf("x1 y1 x2 y2 x3 y3:\n");
     scanf("%d %d %d %d %d %d",&x1,&y1,&x2,&y2,&x3,&y3);
 
     //I used here x2 y2 as the top angle of triangle  
@@ -133,72 +127,32 @@ void draw_triangle(app_t *newEdit){
 
 // function where you change the color and the size of the brush
 void mod_cl_or_size(app_t *newEdit){
-    int num;
+    int32_t r, g, b;
+    int32_t size;
 
-    printf("What color do you want your brush to be?\n");
-    printf("1.White\n");
-    printf("2.Black\n");
-    printf("3.Green\n");
-    printf("4.Blue\n");
-    printf("5.Red\n");
-    scanf("%d",&num);
+    scanf("%d%d%d%d", &r, &g, &b, &size);
 
-    switch(num){
-        case 1:
-            newEdit->brush_settings.brush_color.red = 255;
-            newEdit->brush_settings.brush_color.green = 255;
-            newEdit->brush_settings.brush_color.blue = 255;
-            break;
-        case 2:
-            newEdit->brush_settings.brush_color.red = 0;
-            newEdit->brush_settings.brush_color.green = 0;
-            newEdit->brush_settings.brush_color.blue = 0;
-            break;
-        case 3:
-            newEdit->brush_settings.brush_color.red = 0;
-            newEdit->brush_settings.brush_color.green = 255;
-            newEdit->brush_settings.brush_color.blue = 0;
-            break;
-        case 4:
-            newEdit->brush_settings.brush_color.red = 255;
-            newEdit->brush_settings.brush_color.green = 0;
-            newEdit->brush_settings.brush_color.blue = 0;
-            break;
-        case 5:
-            newEdit->brush_settings.brush_color.red = 0;
-            newEdit->brush_settings.brush_color.green = 0;
-            newEdit->brush_settings.brush_color.blue = 255;
-            break;
-        default:
-            break;
-        
+    while (r > 255 || g > 255 || b > 255 || r < 0 || g < 0 || b < 0) {
+        fprintf(stderr, "<Error>: Incorrect rgb value (%d, %d, %d)\n", r, g, b);
+        scanf("%d%d%d", &r, &g, &b);
     }
 
-    printf("What size do you want the brush to be?\n");
-    printf("1.1 pixel\n");
-    printf("2.3 pixels\n");
-    printf("3.5 pixels\n");
-    scanf("%d",&num);
-    switch (num)
-    {
-    case 1:
-        newEdit->brush_settings.brush_size = 1;
-        break;
-    case 2:
-        newEdit->brush_settings.brush_size = 3;
-        break;
-    case 3:
-        newEdit->brush_settings.brush_size = 5;
-        break;
-    default:
-        break;
+    newEdit->brush_settings.brush_color.red = (uint8_t)r;
+    newEdit->brush_settings.brush_color.green = (uint8_t)g;
+    newEdit->brush_settings.brush_color.blue = (uint8_t)b;
+
+    while (size <= 0 || size > 255) {
+        fprintf(stderr, "<Error>: size too small/big [%d]\n", size);
+        scanf("%d", &size);
     }
-    
+
+    newEdit->brush_settings.brush_size = (uint16_t)size;
 }
 
 
 // function from where you can change the image
 void general_functions(app_t *newEdit){
+    printf("<App>: [Image info] : %dx%d\n", newEdit->opened_image->infoDIB.width, newEdit->opened_image->infoDIB.height);
     
     int num = 1;
     //if you dont change the color it's will be set from the start as black
@@ -207,27 +161,29 @@ void general_functions(app_t *newEdit){
     newEdit->brush_settings.brush_color.blue = 0;
 
     while(num != 0){
-        printf("What do you want to change?\n");
-        printf("0.Leave\n");
-        printf("1.Draw a line\n");
-        printf("2.Draw a square\n");
-        printf("3.Draw a triangle\n");
-        printf("4.Change the color or the size of the brush\n");
+        printf("<App>: [0 - Exit] [1 - Line] [2 - Square] [3 - Triangle] [4 - Brush]\n");
+        printf("<App>: ");
         scanf("%d",&num);
 
         if(num == 0)break;
 
         switch (num){
         case 1:
+            printf("<App>: [Draw a line] : (x1, y1) -> (x2, y2)\n");
             draw_line(newEdit);
             break;
         case 2:
+            printf("<App>: [Draw a square] : corner_1 -> opposite_corner_1\n");
+            printf("<App>: [Draw a square] : (x1, y1) -> (x2, y2)\n");
             draw_square(newEdit);
             break;
         case 3:
+            printf("<App>: [Draw a triangle] : (x1, y1) -> (x2, y2) -> (x3, y3)\n");
             draw_triangle(newEdit);
             break;
         case 4:
+            printf("<App>: [Brush settings] : color -> size\n");
+            printf("<App>: [Brush settings] : (r, g, b) -> (size)\n");
             mod_cl_or_size(newEdit);
             break;
         default:

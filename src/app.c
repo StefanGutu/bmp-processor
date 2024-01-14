@@ -14,8 +14,7 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    FILE *fp_in = fopen(argv[1],"rb");
-
-    open_bmp_file(fp_in,argv[2]);
+    app_entry_point(argv[1], argv[2]);
+    
     return EXIT_SUCCESS;
 }

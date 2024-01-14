@@ -50,7 +50,7 @@ typedef struct app{
     char            *file_name_out;
 }app_t;
 
-
+void     app_entry_point        (char *in_file_name, char *out_file_name);
 void     open_bmp_file          (FILE *fp_in,char *file_name);
 void     read_image             (FILE *fp,app_t *newEdit);
 void     write_image            (app_t *newEdit);// INFO: the information of the edited image will always be saved in new.bmp

@@ -3,40 +3,57 @@
 A simple project that work with BMP images in C.
 
 
-## Table of Contents
+## `Table of Contents`
 
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Usage](#usage)
+- [App](#app)
 
-## Introduction
+## `Introduction`
 
 The project helps you to modify a BMP image in console,
 it's a simple project than can draw lines,squars and triangles of 
 different colors on a new  BMP image.
 
 
-## Installation
+## `Installation`
 
-1. Clone the repository:
+```bash
+    $> git clone https://github.com/IntoParadox/bmp-processor.git
+    $> cd bmp-processor
+    $> cd build
+    $> make
 
-    ```bash
-    git clone https://github.com/IntoParadox/bmp-processor.git
-    ```
+    # ...
+    $> ls
+    $> Makefile sbmp3
+```
 
-## Usage
+If you want to install the executable in your path:
 
-1. Navigate to the project directory:
+```bash
+    $> export PATH=$PATH:$PWD
+```
 
-    ```bash
-    cd bmp-processor
-    ```
+## `Usage`
 
-2. Open the main.c file and there you can add your own BMP image or to take one from the
-[example folder](https://github.com/IntoParadox/bmp-processor/tree/main/examples).
+Trigger the usage menu by:
 
-> [!NOTE]
-> Don't forget to add the image first in the same folder where the main.c file is.
+```bash
+    $> sbmp3
+    Usage: sbmp3 [file input.bmp] [file output.bmp]
+```
+
+The application waits for a **valid** bmp3 file and writes the output to another file
+
+>**NOTE:** The input file can be the same as the output file.
+
+## `App`
+
+In order to see the *available* options, a pop-up menu will be triggered when the app is opened.
+
+>**NOTE:** Every option has a pop-up instructions for its execution.
 
 
 
