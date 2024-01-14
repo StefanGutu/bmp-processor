@@ -32,7 +32,7 @@ different colors on a new  BMP image.
     cd bmp-processor
     ```
 
-2. Open the main.c file and there you can add your own bmp file or to take one from the
+2. Open the main.c file and there you can add your own BMP image or to take one from the
 [example folder](https://github.com/IntoParadox/bmp-processor/tree/main/examples).
 
 > [!NOTE]
